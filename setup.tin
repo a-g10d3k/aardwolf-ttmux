@@ -1,15 +1,11 @@
-#VARIABLE {name} {};				# Character name
-#VARIABLE {password} {};			# Character password
-#VARIABLE {dir} {.};				# Directory of setings, without '/' or '~' (Ex. /home/user/aardwolf, not ~/aardwolf )
+#VARIABLE {dir} {.}
 #VARIABLE {confdir} {$dir/conf}
 #VARIABLE {logdir} {$dir/log}
 #VARIABLE {mapdir} {$dir/map}
 #VARIABLE {modulesdir} {$dir/modules}
 
-#READ {$modulesdir/gmcp.tin};
-
-#SESSION {aard} {aardmud.org} {4000};
-
+#READ {$confdir/.secret.tin}
+#READ {$modulesdir/gmcp.tin}
 #READ {$confdir/variables.tin}
 #READ {$modulesdir/spellup.tin}
 #READ {$modulesdir/zzGMCP_to_stat.tin}
@@ -17,14 +13,43 @@
 #READ {$modulesdir/map.tin}
 #READ {$modulesdir/ticking.tin}
 #READ {$modulesdir/quest.tin}
-
-#MAP READ {$mapdir/map-all.tt}				# Once you have a map file, you will read it in here
+#READ {$modulesdir/affcap.tin}
 
 #LOG APPEND {$logdir/active_log.raw}
 
+#config {REPEAT ENTER} {ON}
+#config {COMMAND ECHO} {ON}
+#config {PACKET PATCH} {0.5}
+
 #VARIABLE {mapping} {1}
-#VARIABLE {showmap} {0}
-#VARIABLE {autoscan} {0}
+#VARIABLE {showmap} {1}
+#VARIABLE {autoscan} {1}
 #VARIABLE {repoptrack} {1}
 
-#SPLIT 0 4
+#SPLIT 0 5
+
+#NOP gag the prompt and show status at the bottom of the screen
+
+#action {~^{.*}\[%1/%2hp %3/%4mn %5/%6mv %7qt %8tnl] >} {
+    #showme {<129>HP:<179>%1/%2  <149>MN:<179>%3/%4  <139>MV:<179>%5/%6  <169>QT:<179>%7  <159>TNL:<179>%8} {-5} {3};
+    #line gag;
+}
+
+#event {SESSION CONNECTED} {
+    #MAP READ {$mapdir/map-all.tt};
+    #map flag nofollow off;
+    #map goto 1;
+    #var mapping 1;
+
+    #delay 1 {
+        #send {$name};
+        #send {$password};
+	#send {prompt {[%h/%Hhp %m/%Mmn %v/%Vmv %qqt %Xtnl] >%r}};
+        tags map on;
+        tags roomchars on;
+        tags equipment on;
+    }
+}
+
+#SESSION {aard} {aardmud.org} {4000}
+
