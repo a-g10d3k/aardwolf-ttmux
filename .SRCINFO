@@ -1,0 +1,21 @@
+pkgbase = aardwolf-ttmux-git
+	pkgdesc = A TUI client for the Aardwolf MUD based on tintin and tmux
+	pkgver = 20260506.976c1f0
+	pkgrel = 1
+	url = https://github.com/theixle/aardwolf-tintin
+	arch = any
+	license = unknown
+	makedepends = git
+	depends = tintin
+	depends = tmux
+	depends = coreutils
+	optdepends = perl-dbi: for mush-map-to-tintin-converter
+	optdepends = perl-dbd-sqlite: for mush-map-to-tintin-converter
+	provides = aardwolf-ttmux
+	conflicts = aardwolf-ttmux
+	source = aardwolf-ttmux::git+https://github.com/theixle/aardwolf-tintin.git
+	source = aardwolf-ttmux.sh
+	sha256sums = SKIP
+	sha256sums = 9e8580f3e646808808fdd7d4b6fd13f0a74f0960d5d14e80c61fe29f0af6f86b
+
+pkgname = aardwolf-ttmux-git
